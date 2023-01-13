@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="./d3.v7.min.js" charset="utf-8"></script>
+    <script src="./data.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+
+</head>
+<body>
+
+<div class="widget" style="min-width:700px; height:500px; background-color: bisque;">
+    <h1 onclick="download_json()">Download JSON</h1>
+
+    <p id="value"></p>
+    <div id="slider"></div>
+
+</div>
+
+<script type="text/javascript">
+    //The SVG Container
+    let svgContainer = d3.select("body").append("svg").attr("width", 12400).attr("height", 3509);
+    let svg = d3.select('svg')
+
+    let myimage = svg.append('image')
+        .attr('xlink:href', 'http://localhost:8812/form.png')
+        .attr('width', 12400)
+        .attr('height', 3509)
+
+    for (let i = 0; i < data.questoes.length; i++) {
+        let alternatives = data.questoes[i][1].map((x, index) => {
+            return [index, ...x];
+        });
+
+        let circles = svg.selectAll(null)
+            .data(alternatives)
+            .enter()
+            .append("circle")
+
+            .on("mousemove", function (d) {
+                d3.select(this).transition().delay(0).duration(500).style("fill", "red")
+            })
+            .on("mouseout", function (d) {
+                d3.select(this).transition().delay(0).duration(500).style("fill", "green")
+            })
+
+        circles.attr("cx", d => d[2])
+            .attr("cy", d => d[3])
+            .attr('r', 20)
+            .attr('idx', d => [i, d[0]])
+            .style('fill', 'green')
+            .style('opacity', 0.5);
+
+        let dragHandler = d3.drag()
+            .on("drag", function (event) {
+                d3.select(this)
+                    .attr("cx", event.x)
+                    .attr("cy", event.y);
+
+
+                let idx = d3.select(this).attr('idx').split(",").map(Number)
+                data.questoes[idx[0]][1][idx[1]][1] = event.x;
+                data.questoes[idx[0]][1][idx[1]][2] = event.y;
+            });
+        dragHandler(svg.selectAll("circle"));
+    }
+
+    function download(content, fileName, contentType) {
+        var a = document.createElement("a");
+        var file = new Blob([content], {type: contentType});
+        a.href = URL.createObjectURL(file);
+        a.download = fileName;
+        a.click();
+    }
+
+    function download_json() {
+        download(data.questoes, 'questoes.json', 'data:text/json');
+    }
+
+
+</script>
+</body>
+</html>
