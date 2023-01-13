@@ -16,6 +16,8 @@ No arquivo **alinhar_pontos.html**, na linha 25 mude o nome do arquivo PNG para 
         .attr('xlink:href', 'http://localhost:8812/form.png')
 ```
 
-### 2. Arraste e solte os pontos que estão desalinhados
+### 2. Abra o arquivo alinhar_pontos.html em um navegador
 
-### 3. Clique em Download JSON e salve em algum local de sua preferência
+### 3. Arraste e solte os pontos que estão desalinhados
+
+### 4. Clique em Download JSON e salve em algum local de sua preferência
